@@ -4,10 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/components/ui";
 
-// Phase 1 routes. Contacts, QR, and stats arrive in later phases.
+// QR codes and stats arrive in later phases.
 const links = [
   { href: "/", label: "Dashboard" },
   { href: "/campaigns", label: "Campaigns" },
+  { href: "/contacts", label: "Businesses" },
   { href: "/formats", label: "Card formats" },
 ] as const;
 

@@ -2,8 +2,10 @@ import { z } from "zod";
 import { dollarsToCents } from "@/lib/money";
 import {
   CAMPAIGN_STATUSES,
+  CONTACT_SOURCES,
   CREATIVE_STATUSES,
   PAID_STATUSES,
+  PIPELINE_STAGES,
   PAYMENT_METHODS,
   SPOT_STATUSES,
 } from "@/lib/types";
@@ -111,6 +113,43 @@ export const spotUpdateSchema = z
     message: "Pick or add the business that bought this spot",
     path: ["contact_id"],
   });
+
+const optUrl = z.preprocess(
+  (v) => {
+    const b = blankToNull(v);
+    if (typeof b !== "string") return b;
+    const t = b.trim();
+    return /^https?:\/\//i.test(t) ? t : `https://${t}`;
+  },
+  z.url({ message: "Enter a valid web address" }).max(500).nullable().default(null),
+);
+
+/** Comma-separated tags → lowercase, de-duplicated array. */
+const tags = z.preprocess(
+  (v) =>
+    typeof v === "string"
+      ? [...new Set(v.split(",").map((t) => t.trim().toLowerCase()).filter(Boolean))]
+      : [],
+  z.array(z.string().max(40)).max(30),
+);
+
+export const contactSchema = z.object({
+  business_name: reqText,
+  contact_name: optText,
+  phone: z.preprocess(blankToNull, z.string().trim().max(40).nullable().default(null)),
+  email: z.preprocess(
+    blankToNull,
+    z.email({ message: "Enter a valid email" }).max(200).nullable().default(null),
+  ),
+  category: optText,
+  website: optUrl,
+  facebook_url: optUrl,
+  address: optText,
+  source: z.preprocess(blankToNull, z.enum(CONTACT_SOURCES).nullable().default(null)),
+  pipeline_stage: z.enum(PIPELINE_STAGES),
+  tags,
+  notes: optText,
+});
 
 export type FieldErrors = Record<string, string[] | undefined>;
 

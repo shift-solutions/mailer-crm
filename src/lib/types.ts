@@ -106,3 +106,56 @@ export const CREATIVE_LABELS: Record<CreativeStatus, string> = {
   proof_sent: "Proof sent",
   approved: "Approved",
 };
+
+export type PipelineStage = "lead" | "contacted" | "interested" | "customer" | "lost";
+export const PIPELINE_STAGES: PipelineStage[] = [
+  "lead",
+  "contacted",
+  "interested",
+  "customer",
+  "lost",
+];
+export const PIPELINE_LABELS: Record<PipelineStage, string> = {
+  lead: "Lead",
+  contacted: "Contacted",
+  interested: "Interested",
+  customer: "Customer",
+  lost: "Lost",
+};
+
+export const CONTACT_SOURCES = [
+  "facebook_group",
+  "outscraper",
+  "yard_sign",
+  "referral",
+  "cold_email",
+  "walk_in",
+  "other",
+] as const;
+export type ContactSource = (typeof CONTACT_SOURCES)[number];
+export const SOURCE_LABELS: Record<ContactSource, string> = {
+  facebook_group: "Facebook group",
+  outscraper: "Outscraper",
+  yard_sign: "Yard sign",
+  referral: "Referral",
+  cold_email: "Cold email",
+  walk_in: "Walk-in",
+  other: "Other",
+};
+
+export type Contact = {
+  id: string;
+  created_at: string;
+  business_name: string;
+  contact_name: string | null;
+  phone: string | null;
+  email: string | null;
+  category: string | null;
+  website: string | null;
+  facebook_url: string | null;
+  address: string | null;
+  source: ContactSource | null;
+  pipeline_stage: PipelineStage;
+  tags: string[];
+  notes: string | null;
+};
