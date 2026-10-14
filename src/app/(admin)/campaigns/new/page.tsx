@@ -11,6 +11,7 @@ export default function NewCampaignPage() {
   return (
     <div className="max-w-4xl">
       <PageHeader
+        eyebrow={{ href: "/campaigns", label: "Campaigns" }}
         title="New campaign"
         subtitle="Spots are generated from the card format you pick."
       />

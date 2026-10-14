@@ -40,7 +40,7 @@ export function CardSide<T extends BoardSpot>({
         </span>
       </figcaption>
       <div
-        className="relative w-full rounded-md border border-stone-300 bg-stone-100 shadow-sm"
+        className="relative w-full rounded-xl border border-stone-300 bg-stone-100 shadow-sm"
         style={{ aspectRatio: `${widthIn} / ${heightIn}` }}
       >
         {placed.map((s) => (

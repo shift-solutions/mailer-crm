@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "New business" };
 export default function NewContactPage() {
   return (
     <div className="max-w-4xl">
-      <PageHeader title="New business" />
+      <PageHeader eyebrow={{ href: "/contacts", label: "Businesses" }} title="New business" />
       <Card>
         <ContactForm action={createContact} submitLabel="Add business" />
       </Card>

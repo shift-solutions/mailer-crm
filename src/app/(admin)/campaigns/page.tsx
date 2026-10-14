@@ -5,7 +5,7 @@ import { requireAdmin } from "@/lib/auth";
 import { formatCents } from "@/lib/money";
 import { listCampaigns } from "@/lib/queries";
 import { CampaignStatusBadge, formatDate } from "@/components/campaign-bits";
-import { ButtonLink, Card, PageHeader, PageSkeleton, cn } from "@/components/ui";
+import { ButtonLink, Card, PageHeader, PageSkeleton, cn, surfaceClass } from "@/components/ui";
 
 export const metadata: Metadata = { title: "Campaigns" };
 
@@ -36,24 +36,24 @@ async function CampaignTable() {
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-stone-200 bg-white">
+    <div className={cn(surfaceClass, "overflow-x-auto")}>
       <table className="w-full min-w-[720px] text-sm">
-        <thead className="border-b border-stone-200 text-left text-xs text-stone-500">
+        <thead className="border-b border-stone-200 text-left text-[11px] font-medium uppercase tracking-wider text-stone-400">
           <tr>
-            <th className="px-4 py-2 font-medium">Campaign</th>
-            <th className="px-4 py-2 font-medium">Status</th>
-            <th className="px-4 py-2 font-medium">Drop date</th>
-            <th className="px-4 py-2 text-right font-medium">Sold</th>
-            <th className="px-4 py-2 text-right font-medium">Revenue</th>
-            <th className="px-4 py-2 text-right font-medium">Profit</th>
+            <th className="px-5 py-3 font-medium">Campaign</th>
+            <th className="px-5 py-3 font-medium">Status</th>
+            <th className="px-5 py-3 font-medium">Drop date</th>
+            <th className="px-5 py-3 text-right font-medium">Sold</th>
+            <th className="px-5 py-3 text-right font-medium">Revenue</th>
+            <th className="px-5 py-3 text-right font-medium">Profit</th>
           </tr>
         </thead>
         <tbody className="tabular">
           {campaigns.map((c) => {
             const sellable = c.fin.spots_total - c.fin.spots_house;
             return (
-              <tr key={c.id} className="border-t border-stone-100 hover:bg-stone-50">
-                <td className="px-4 py-2.5">
+              <tr key={c.id} className="border-t border-stone-100 transition-colors hover:bg-stone-50">
+                <td className="px-5 py-3.5">
                   <Link href={`/campaigns/${c.id}`} className="font-medium hover:underline">
                     {c.name}
                   </Link>
@@ -62,17 +62,17 @@ async function CampaignTable() {
                     {c.area ? ` · ${c.area}` : ""}
                   </p>
                 </td>
-                <td className="px-4 py-2.5">
+                <td className="px-5 py-3.5">
                   <CampaignStatusBadge status={c.status} />
                 </td>
-                <td className="px-4 py-2.5">{formatDate(c.drop_date)}</td>
-                <td className="px-4 py-2.5 text-right">
+                <td className="px-5 py-3.5">{formatDate(c.drop_date)}</td>
+                <td className="px-5 py-3.5 text-right">
                   {c.fin.spots_sold}/{sellable}
                 </td>
-                <td className="px-4 py-2.5 text-right">{formatCents(c.fin.revenue_cents)}</td>
+                <td className="px-5 py-3.5 text-right">{formatCents(c.fin.revenue_cents)}</td>
                 <td
                   className={cn(
-                    "px-4 py-2.5 text-right font-medium",
+                    "px-5 py-3.5 text-right font-medium",
                     c.fin.profit_cents >= 0 ? "text-green-700" : "text-red-600",
                   )}
                 >

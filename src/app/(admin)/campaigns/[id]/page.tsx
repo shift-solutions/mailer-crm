@@ -11,7 +11,8 @@ import {
   GoNoGoBadge,
   formatDate,
 } from "@/components/campaign-bits";
-import { ButtonLink, Card, PageHeader, PageSkeleton, cn } from "@/components/ui";
+import { ButtonLink, Card, Metric, PageHeader, PageSkeleton } from "@/components/ui";
+import { EditPanel } from "@/components/drawer";
 import { updateCampaign } from "../actions";
 import { CampaignForm } from "../campaign-form";
 import { DeleteCampaignButton } from "./delete-campaign";
@@ -72,6 +73,7 @@ async function CampaignDetail({ params }: { params: Promise<{ id: string }> }) {
   return (
     <>
       <PageHeader
+        eyebrow={{ href: "/campaigns", label: "Campaigns" }}
         title={campaign.name}
         subtitle={
           <span className="flex flex-wrap items-center gap-2">
@@ -91,6 +93,13 @@ async function CampaignDetail({ params }: { params: Promise<{ id: string }> }) {
         }
         actions={
           <>
+            <EditPanel title="Edit campaign" description={campaign.name}>
+              <CampaignForm
+                action={updateCampaign.bind(null, campaign.id)}
+                campaign={campaign}
+                submitLabel="Save campaign"
+              />
+            </EditPanel>
             <ButtonLink
               href={`/campaigns/${campaign.id}/export`}
               variant="secondary"
@@ -107,11 +116,11 @@ async function CampaignDetail({ params }: { params: Promise<{ id: string }> }) {
         {/* Financials */}
         <section className="grid gap-3 lg:grid-cols-3">
           <Card className="lg:col-span-2">
-            <dl className="mb-4 grid grid-cols-2 gap-4 text-sm tabular sm:grid-cols-4">
-              <Stat label="Revenue (sold)" value={formatCents(fin.revenueCents)} />
-              <Stat label="Collected" value={formatCents(fin.collectedCents)} />
-              <Stat label="Cost" value={formatCents(fin.costCents)} />
-              <Stat
+            <dl className="mb-5 grid grid-cols-2 gap-5 sm:grid-cols-4">
+              <Metric label="Revenue (sold)" value={formatCents(fin.revenueCents)} />
+              <Metric label="Collected" value={formatCents(fin.collectedCents)} />
+              <Metric label="Cost" value={formatCents(fin.costCents)} />
+              <Metric
                 label="Profit"
                 value={formatCents(fin.profitCents)}
                 tone={fin.profitCents >= 0 ? "good" : "bad"}
@@ -129,11 +138,11 @@ async function CampaignDetail({ params }: { params: Promise<{ id: string }> }) {
               <p className="text-sm font-semibold">Spots</p>
               <GoNoGoBadge state={gng} sold={fin.sold} min={campaign.min_spots_to_go} />
             </div>
-            <dl className="grid grid-cols-4 gap-2 text-center text-sm tabular">
-              <Stat label="Sold" value={`${fin.sold}/${sellable}`} />
-              <Stat label="Held" value={fin.held} />
-              <Stat label="Open" value={fin.open} />
-              <Stat label="House" value={fin.house} />
+            <dl className="grid grid-cols-4 gap-2 text-center">
+              <Metric size="md" label="Sold" value={`${fin.sold}/${sellable}`} />
+              <Metric size="md" label="Held" value={fin.held} />
+              <Metric size="md" label="Open" value={fin.open} />
+              <Metric size="md" label="House" value={fin.house} />
             </dl>
           </Card>
         </section>
@@ -142,7 +151,7 @@ async function CampaignDetail({ params }: { params: Promise<{ id: string }> }) {
         <Card title="Timeline">
           <ol className="grid gap-3 sm:grid-cols-4">
             {timeline.map(([label, date]) => (
-              <li key={label} className="rounded-md border border-stone-100 bg-stone-50 px-3 py-2">
+              <li key={label} className="rounded-xl border border-stone-100 bg-stone-50 px-3.5 py-3">
                 <p className="text-xs text-stone-500">{label}</p>
                 <p className="text-sm font-medium tabular">{formatDate(date)}</p>
                 <p className="text-xs tabular">
@@ -164,39 +173,12 @@ async function CampaignDetail({ params }: { params: Promise<{ id: string }> }) {
           />
         ) : null}
 
-        <Card title="Campaign details">
-          <CampaignForm
-            action={updateCampaign.bind(null, campaign.id)}
-            campaign={campaign}
-            submitLabel="Save campaign"
-          />
-        </Card>
+        {campaign.notes ? (
+          <Card title="Notes">
+            <p className="whitespace-pre-wrap text-sm leading-relaxed text-stone-700">{campaign.notes}</p>
+          </Card>
+        ) : null}
       </div>
     </>
-  );
-}
-
-function Stat({
-  label,
-  value,
-  tone,
-}: {
-  label: string;
-  value: string | number;
-  tone?: "good" | "bad";
-}) {
-  return (
-    <div>
-      <dt className="text-xs text-stone-500">{label}</dt>
-      <dd
-        className={cn(
-          "text-lg font-semibold",
-          tone === "good" && "text-green-700",
-          tone === "bad" && "text-red-600",
-        )}
-      >
-        {value}
-      </dd>
-    </div>
   );
 }

@@ -5,7 +5,7 @@ import { requireAdmin } from "@/lib/auth";
 import { formatCents } from "@/lib/money";
 import { PIPELINE_LABELS, PIPELINE_STAGES, type Contact, type PipelineStage } from "@/lib/types";
 import { StageBadge } from "@/components/stage-badge";
-import { ButtonLink, Card, Input, PageHeader, PageSkeleton, cn } from "@/components/ui";
+import { ButtonLink, Card, Input, PageHeader, PageSkeleton, cn, surfaceClass } from "@/components/ui";
 
 export const metadata: Metadata = { title: "Businesses" };
 
@@ -118,7 +118,7 @@ async function ContactList({
               key={t.label}
               href={href(t.key)}
               className={cn(
-                "rounded-md px-2 py-1",
+                "rounded-full px-2.5 py-1 text-xs font-medium transition-colors",
                 stage === t.key ? "bg-stone-900 text-white" : "text-stone-600 hover:bg-stone-100",
               )}
             >
@@ -137,33 +137,33 @@ async function ContactList({
           </p>
         </Card>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-stone-200 bg-white">
+        <div className={cn(surfaceClass, "overflow-x-auto")}>
           <table className="w-full min-w-[760px] text-sm">
-            <thead className="border-b border-stone-200 text-left text-xs text-stone-500">
+            <thead className="border-b border-stone-200 text-left text-[11px] font-medium uppercase tracking-wider text-stone-400">
               <tr>
-                <th className="px-4 py-2 font-medium">Business</th>
-                <th className="px-4 py-2 font-medium">Stage</th>
-                <th className="px-4 py-2 font-medium">Contact</th>
-                <th className="px-4 py-2 font-medium">Tags</th>
-                <th className="px-4 py-2 text-right font-medium">Spots</th>
-                <th className="px-4 py-2 text-right font-medium">Lifetime</th>
+                <th className="px-5 py-3 font-medium">Business</th>
+                <th className="px-5 py-3 font-medium">Stage</th>
+                <th className="px-5 py-3 font-medium">Contact</th>
+                <th className="px-5 py-3 font-medium">Tags</th>
+                <th className="px-5 py-3 text-right font-medium">Spots</th>
+                <th className="px-5 py-3 text-right font-medium">Lifetime</th>
               </tr>
             </thead>
             <tbody className="tabular">
               {contacts.map((c) => {
                 const lt = lifetime.get(c.id);
                 return (
-                  <tr key={c.id} className="border-t border-stone-100 hover:bg-stone-50">
-                    <td className="px-4 py-2.5">
+                  <tr key={c.id} className="border-t border-stone-100 transition-colors hover:bg-stone-50">
+                    <td className="px-5 py-3.5">
                       <Link href={`/contacts/${c.id}`} className="font-medium hover:underline">
                         {c.business_name}
                       </Link>
                       {c.category ? <p className="text-xs text-stone-500">{c.category}</p> : null}
                     </td>
-                    <td className="px-4 py-2.5">
+                    <td className="px-5 py-3.5">
                       <StageBadge stage={c.pipeline_stage} />
                     </td>
-                    <td className="px-4 py-2.5 text-xs text-stone-600">
+                    <td className="px-5 py-3.5 text-xs text-stone-600">
                       {c.contact_name ? <p className="text-sm text-stone-800">{c.contact_name}</p> : null}
                       {c.phone ? (
                         <a href={`tel:${c.phone}`} className="hover:underline">
@@ -177,17 +177,17 @@ async function ContactList({
                         </a>
                       ) : null}
                     </td>
-                    <td className="px-4 py-2.5">
+                    <td className="px-5 py-3.5">
                       <div className="flex flex-wrap gap-1">
                         {c.tags.map((t) => (
-                          <span key={t} className="rounded bg-stone-100 px-1.5 py-0.5 text-xs text-stone-600">
+                          <span key={t} className="rounded-full bg-stone-100 px-2 py-0.5 text-xs text-stone-600">
                             {t}
                           </span>
                         ))}
                       </div>
                     </td>
-                    <td className="px-4 py-2.5 text-right">{lt?.spots ?? 0}</td>
-                    <td className="px-4 py-2.5 text-right">{lt ? formatCents(lt.cents) : "—"}</td>
+                    <td className="px-5 py-3.5 text-right">{lt?.spots ?? 0}</td>
+                    <td className="px-5 py-3.5 text-right">{lt ? formatCents(lt.cents) : "—"}</td>
                   </tr>
                 );
               })}

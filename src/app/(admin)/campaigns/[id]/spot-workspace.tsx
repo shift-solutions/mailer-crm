@@ -114,9 +114,9 @@ export function SpotWorkspace({
       </Card>
 
       <Card title="Spots">
-        <div className="-m-4 overflow-x-auto">
+        <div className="-m-5 overflow-x-auto">
           <table className="w-full min-w-[760px] text-sm">
-            <thead className="border-b border-stone-200 text-left text-xs text-stone-500">
+            <thead className="border-b border-stone-200 text-left text-[11px] font-medium uppercase tracking-wider text-stone-400">
               <tr>
                 {th("code", "Spot")}
                 <th className="px-3 py-2 font-medium">Size</th>

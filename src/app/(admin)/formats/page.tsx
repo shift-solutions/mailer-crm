@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { requireAdmin } from "@/lib/auth";
 import { formatCents } from "@/lib/money";
-import { ButtonLink, Card, PageHeader, PageSkeleton } from "@/components/ui";
+import { ButtonLink, Card, PageHeader, PageSkeleton, surfaceClass, cn } from "@/components/ui";
 
 export const metadata: Metadata = { title: "Card formats" };
 
@@ -50,7 +50,10 @@ async function FormatList() {
           <Link
             key={f.id}
             href={`/formats/${f.id}`}
-            className="rounded-lg border border-stone-200 bg-white p-4 hover:border-stone-400"
+            className={cn(
+              surfaceClass,
+              "block p-5 transition duration-200 hover:-translate-y-px hover:border-stone-300 hover:shadow-md",
+            )}
           >
             <p className="font-medium">{f.name}</p>
             <p className="mt-1 text-sm text-stone-500 tabular">

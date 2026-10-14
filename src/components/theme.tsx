@@ -100,7 +100,7 @@ export function ThemeSwitcher({ className }: { className?: string }) {
     <div
       role="radiogroup"
       aria-label="Color theme"
-      className={cn("inline-flex rounded-md border border-stone-200 bg-stone-50 p-0.5", className)}
+      className={cn("inline-flex rounded-lg border border-stone-200 bg-stone-50 p-0.5", className)}
     >
       {options.map((o) => {
         const active = choice === o.value;
@@ -114,7 +114,7 @@ export function ThemeSwitcher({ className }: { className?: string }) {
             title={o.label}
             onClick={() => setChoice(o.value)}
             className={cn(
-              "rounded px-2 py-1 transition-colors",
+              "rounded-md px-2 py-1 transition-colors",
               active ? "bg-white text-stone-900 shadow-sm" : "text-stone-500 hover:text-stone-900",
             )}
           >

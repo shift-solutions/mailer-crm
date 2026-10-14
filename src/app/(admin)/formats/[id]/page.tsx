@@ -5,6 +5,7 @@ import { formatCents } from "@/lib/money";
 import type { CardFormat, FormatSpot } from "@/lib/types";
 import { CardSide } from "@/components/card-side";
 import { Card, PageHeader, PageSkeleton } from "@/components/ui";
+import { EditPanel } from "@/components/drawer";
 import { saveFormatSpot, updateFormat } from "../actions";
 import { FormatForm } from "../format-form";
 import { DeleteFormatButton, FormatSpotRow } from "./spot-editor";
@@ -51,9 +52,23 @@ async function FormatDetail({ params }: { params: Promise<{ id: string }> }) {
   return (
     <>
       <PageHeader
+        eyebrow={{ href: "/formats", label: "Card formats" }}
         title={format.name}
-        subtitle={`${allSpots.length} spots · ${formatCents(listTotal)} at list price`}
-        actions={<DeleteFormatButton formatId={format.id} />}
+        subtitle={`${format.width_in}″ × ${format.height_in}″ · ${allSpots.length} spots · ${formatCents(listTotal)} at list${
+          format.homes_default ? ` · ${format.homes_default.toLocaleString()} homes` : ""
+        }`}
+        actions={
+          <>
+            <EditPanel title="Edit format" description={format.name} width="lg">
+              <FormatForm
+                action={updateFormat.bind(null, format.id)}
+                format={format}
+                submitLabel="Save format"
+              />
+            </EditPanel>
+            <DeleteFormatButton formatId={format.id} />
+          </>
+        }
       />
 
       <div className="space-y-6">
@@ -110,13 +125,11 @@ async function FormatDetail({ params }: { params: Promise<{ id: string }> }) {
           </div>
         </Card>
 
-        <Card title="Format details" className="max-w-2xl">
-          <FormatForm
-            action={updateFormat.bind(null, format.id)}
-            format={format}
-            submitLabel="Save format"
-          />
-        </Card>
+        {format.notes ? (
+          <Card title="Notes">
+            <p className="whitespace-pre-wrap text-sm leading-relaxed text-stone-700">{format.notes}</p>
+          </Card>
+        ) : null}
       </div>
     </>
   );

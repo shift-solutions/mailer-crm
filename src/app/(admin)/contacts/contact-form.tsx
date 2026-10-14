@@ -9,6 +9,7 @@ import {
   type Contact,
 } from "@/lib/types";
 import type { ActionState } from "@/lib/validation";
+import { useCloseDrawerOnSave } from "@/components/drawer";
 import { Button, Field, Input, Select, Textarea } from "@/components/ui";
 
 export function ContactForm({
@@ -21,6 +22,7 @@ export function ContactForm({
   submitLabel: string;
 }) {
   const [state, formAction, pending] = useActionState(action, {});
+  useCloseDrawerOnSave(state.ok);
   const e = state.fieldErrors ?? {};
 
   const text = (
@@ -43,7 +45,9 @@ export function ContactForm({
   return (
     <form action={formAction} className="space-y-6">
       <fieldset className="grid gap-3 sm:grid-cols-4">
-        <legend className="mb-2 text-sm font-semibold">Business</legend>
+        <legend className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-stone-400">
+          Business
+        </legend>
         {text("business_name", "Business name", {
           required: true,
           span: "sm:col-span-2",
@@ -65,14 +69,18 @@ export function ContactForm({
       </fieldset>
 
       <fieldset className="grid gap-3 sm:grid-cols-4">
-        <legend className="mb-2 text-sm font-semibold">Contact</legend>
+        <legend className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-stone-400">
+          Contact
+        </legend>
         {text("contact_name", "Owner / contact", { span: "sm:col-span-2" })}
         {text("phone", "Phone", { type: "tel" })}
         {text("email", "Email", { type: "email" })}
       </fieldset>
 
       <fieldset className="grid gap-3 sm:grid-cols-4">
-        <legend className="mb-2 text-sm font-semibold">Tracking</legend>
+        <legend className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-stone-400">
+          Tracking
+        </legend>
         <Field label="Source" htmlFor="source" error={e.source}>
           <Select id="source" name="source" defaultValue={contact?.source ?? ""}>
             <option value="">—</option>

@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { centsToDollarInput } from "@/lib/money";
 import { CAMPAIGN_STATUSES, type Campaign } from "@/lib/types";
 import type { ActionState } from "@/lib/validation";
+import { useCloseDrawerOnSave } from "@/components/drawer";
 import { Button, Field, Input, Select, Textarea } from "@/components/ui";
 
 type FormatOption = { id: string; name: string; homes_default: number | null; spots: number };
@@ -21,6 +22,7 @@ export function CampaignForm({
   submitLabel: string;
 }) {
   const [state, formAction, pending] = useActionState(action, {});
+  useCloseDrawerOnSave(state.ok);
   const [formatId, setFormatId] = useState(formats?.[0]?.id ?? "");
   const selected = formats?.find((f) => f.id === formatId);
   const e = state.fieldErrors ?? {};
@@ -45,7 +47,9 @@ export function CampaignForm({
   return (
     <form action={formAction} className="space-y-6">
       <fieldset className="grid gap-3 sm:grid-cols-4">
-        <legend className="mb-2 text-sm font-semibold">Basics</legend>
+        <legend className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-stone-400">
+          Basics
+        </legend>
         <Field label="Campaign name" htmlFor="name" error={e.name} className="sm:col-span-2">
           <Input
             id="name"
@@ -104,7 +108,9 @@ export function CampaignForm({
       </fieldset>
 
       <fieldset className="grid gap-3 sm:grid-cols-4">
-        <legend className="mb-2 text-sm font-semibold">Dates</legend>
+        <legend className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-stone-400">
+          Dates
+        </legend>
         {date("sales_open_date", "Sales open")}
         {date("sales_deadline", "Sales deadline")}
         {date("artwork_deadline", "Artwork deadline")}
@@ -112,7 +118,9 @@ export function CampaignForm({
       </fieldset>
 
       <fieldset className="grid gap-3 sm:grid-cols-4">
-        <legend className="mb-2 text-sm font-semibold">Costs and targets</legend>
+        <legend className="mb-3 text-[11px] font-semibold uppercase tracking-wider text-stone-400">
+          Costs and targets
+        </legend>
         {money("postage_cost_cents", "Postage")}
         {money("print_cost_cents", "Print")}
         {money("other_cost_cents", "Other costs")}

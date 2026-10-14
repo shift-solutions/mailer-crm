@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import type { CardFormat } from "@/lib/types";
 import type { ActionState } from "@/lib/validation";
+import { useCloseDrawerOnSave } from "@/components/drawer";
 import { Button, Field, Input, Textarea } from "@/components/ui";
 
 export function FormatForm({
@@ -15,6 +16,7 @@ export function FormatForm({
   submitLabel: string;
 }) {
   const [state, formAction, pending] = useActionState(action, {});
+  useCloseDrawerOnSave(state.ok);
   const e = state.fieldErrors ?? {};
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useState } from "react";
 import { centsToDollarInput, formatCents } from "@/lib/money";
 import {
   CREATIVE_LABELS,
@@ -13,6 +13,7 @@ import {
   type SpotWithContact,
 } from "@/lib/types";
 import { Button, Field, Input, Select, cn } from "@/components/ui";
+import { Drawer } from "@/components/drawer";
 import { spotStatusClass } from "@/components/card-side";
 import { updateSpot } from "../actions";
 
@@ -38,37 +39,27 @@ export function SpotDrawer({
   const [paidStatus, setPaidStatus] = useState<PaidStatus>(spot.paid_status);
   const [paidInput, setPaidInput] = useState(centsToDollarInput(spot.paid_cents || null));
   const [method, setMethod] = useState(spot.payment_method ?? "");
-  const closeRef = useRef<HTMLButtonElement>(null);
   const e = state.fieldErrors ?? {};
   const hasBuyer = status === "sold" || status === "held";
 
-  useEffect(() => {
-    closeRef.current?.focus();
-    const onKey = (ev: KeyboardEvent) => ev.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [onClose]);
-
   return (
-    <div className="fixed inset-0 z-40 flex justify-end" role="dialog" aria-modal="true" aria-labelledby="spot-drawer-title">
-      <button type="button" aria-label="Close" className="absolute inset-0 bg-black/30" onClick={onClose} tabIndex={-1} />
-      <aside className="relative flex h-full w-full max-w-md flex-col overflow-y-auto bg-white shadow-xl">
-        <header className="sticky top-0 z-10 flex items-start justify-between border-b border-stone-200 bg-white px-5 py-4">
-          <div>
-            <h2 id="spot-drawer-title" className="font-semibold">
-              Spot {spot.code}
-            </h2>
-            <p className="text-xs text-stone-500 tabular">
-              <span className="capitalize">{spot.side}</span> · {spot.size_label} · {spot.width_in}&Prime; ×{" "}
-              {spot.height_in}&Prime;
-            </p>
-          </div>
-          <button ref={closeRef} type="button" onClick={onClose} className="rounded-md px-2 py-1 text-sm text-stone-500 hover:bg-stone-100">
-            Close
-          </button>
-        </header>
-
-        <form action={formAction} className="flex-1 space-y-5 px-5 py-4">
+    <Drawer
+      title={`Spot ${spot.code}`}
+      description={
+        <>
+          <span className="capitalize">{spot.side}</span>
+          {" · "}
+          {spot.size_label}
+          {" · "}
+          <span className="tabular">
+            {spot.width_in}&Prime; × {spot.height_in}&Prime;
+          </span>
+        </>
+      }
+      onClose={onClose}
+    >
+      <form action={formAction} className="flex min-h-full flex-col">
+        <div className="flex-1 space-y-5 px-5 py-5">
           {/* Status */}
           <fieldset>
             <legend className="mb-1.5 text-xs font-medium text-stone-600">Status</legend>
@@ -81,7 +72,7 @@ export function SpotDrawer({
                   onClick={() => setStatus(s)}
                   aria-pressed={status === s}
                   className={cn(
-                    "rounded-md border px-2 py-1.5 text-sm capitalize",
+                    "rounded-lg border px-2 py-1.5 text-sm capitalize transition-colors",
                     status === s ? cn(spotStatusClass[s], "border-solid font-semibold ring-2 ring-stone-900") : "border-stone-200 text-stone-600 hover:bg-stone-50",
                   )}
                 >
@@ -144,7 +135,7 @@ export function SpotDrawer({
 
           {/* Payment */}
           {hasBuyer || spot.paid_cents > 0 ? (
-            <fieldset className="space-y-3 rounded-md border border-stone-200 p-3">
+            <fieldset className="space-y-3 rounded-xl border border-stone-200 p-3.5">
               <legend className="px-1 text-xs font-medium text-stone-600">Payment</legend>
               <div className="grid grid-cols-2 gap-3">
                 <Field label="Amount received" htmlFor="paid_cents" error={e.paid_cents}>
@@ -208,8 +199,9 @@ export function SpotDrawer({
           ) : (
             <input type="hidden" name="creative_status" value="none" />
           )}
+        </div>
 
-          <div className="sticky bottom-0 -mx-5 flex items-center gap-3 border-t border-stone-200 bg-white px-5 py-3">
+        <div className="sticky bottom-0 mt-auto flex items-center gap-3 border-t border-stone-200/80 bg-white px-5 py-3">
             <Button type="submit" disabled={pending}>
               {pending ? "Saving…" : "Save spot"}
             </Button>
@@ -227,7 +219,6 @@ export function SpotDrawer({
             ) : null}
           </div>
         </form>
-      </aside>
-    </div>
+    </Drawer>
   );
 }

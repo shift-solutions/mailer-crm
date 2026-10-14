@@ -8,7 +8,11 @@ export const metadata: Metadata = { title: "New format" };
 export default function NewFormatPage() {
   return (
     <div className="max-w-2xl">
-      <PageHeader title="New card format" subtitle="Add spots after you create it." />
+      <PageHeader
+        eyebrow={{ href: "/formats", label: "Card formats" }}
+        title="New card format"
+        subtitle="Add spots after you create it."
+      />
       <Card>
         <FormatForm action={createFormat} submitLabel="Create format" />
       </Card>

@@ -18,7 +18,7 @@ export function BreakevenBar({
   return (
     <div>
       <div
-        className={cn("w-full overflow-hidden rounded-full bg-stone-200", compact ? "h-2" : "h-3")}
+        className={cn("w-full overflow-hidden rounded-full bg-stone-200", compact ? "h-1.5" : "h-2")}
         role="progressbar"
         aria-label="Breakeven"
         aria-valuemin={0}

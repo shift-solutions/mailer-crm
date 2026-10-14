@@ -7,17 +7,20 @@ import type {
 } from "react";
 import Link from "next/link";
 
+export const surfaceClass =
+  "rounded-2xl border border-stone-200/80 bg-white shadow-[0_1px_2px_rgba(28,25,23,0.04)]";
+
 export function cn(...classes: (string | false | null | undefined)[]) {
   return classes.filter(Boolean).join(" ");
 }
 
 const buttonBase =
-  "inline-flex items-center justify-center gap-1.5 rounded-md px-3 py-2 text-sm font-medium transition-colors disabled:opacity-50 disabled:pointer-events-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-900";
+  "inline-flex items-center justify-center gap-1.5 rounded-lg px-3.5 py-2 text-sm font-medium tracking-tight transition-colors disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-stone-900";
 const buttonVariants = {
-  primary: "bg-stone-900 text-white hover:bg-stone-700",
-  secondary: "border border-stone-300 bg-white text-stone-900 hover:bg-stone-100",
-  ghost: "text-stone-700 hover:bg-stone-100",
-  danger: "border border-red-200 bg-white text-red-700 hover:bg-red-50",
+  primary: "bg-stone-900 text-white shadow-sm hover:bg-stone-700",
+  secondary: "border border-stone-200 bg-white text-stone-800 shadow-sm hover:bg-stone-50",
+  ghost: "text-stone-600 hover:bg-stone-100 hover:text-stone-900",
+  danger: "border border-red-200 bg-white text-red-700 shadow-sm hover:bg-red-50",
 };
 type Variant = keyof typeof buttonVariants;
 
@@ -42,7 +45,7 @@ export function ButtonLink({
 }
 
 const fieldBase =
-  "block w-full rounded-md border border-stone-300 bg-white px-2.5 py-1.5 text-sm shadow-xs placeholder:text-stone-400 focus:border-stone-900 focus:outline-none focus:ring-1 focus:ring-stone-900";
+  "block w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm shadow-sm transition-shadow placeholder:text-stone-400 focus:border-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-900/15";
 
 export function Input({ className, ...props }: InputHTMLAttributes<HTMLInputElement>) {
   return <input className={cn(fieldBase, className)} {...props} />;
@@ -102,14 +105,14 @@ export function Card({
   action?: ReactNode;
 }) {
   return (
-    <section className={cn("rounded-lg border border-stone-200 bg-white", className)}>
+    <section className={cn(surfaceClass, className)}>
       {title ? (
-        <header className="flex items-center justify-between border-b border-stone-200 px-4 py-2.5">
-          <h2 className="text-sm font-semibold">{title}</h2>
+        <header className="flex items-center justify-between gap-3 border-b border-stone-100 px-5 py-3.5">
+          <h2 className="text-sm font-semibold tracking-tight">{title}</h2>
           {action}
         </header>
       ) : null}
-      <div className="p-4">{children}</div>
+      <div className="p-5">{children}</div>
     </section>
   );
 }
@@ -118,18 +121,59 @@ export function PageHeader({
   title,
   subtitle,
   actions,
+  eyebrow,
 }: {
   title: string;
   subtitle?: ReactNode;
   actions?: ReactNode;
+  eyebrow?: { href: string; label: string };
 }) {
   return (
-    <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
-      <div>
-        <h1 className="text-xl font-semibold tracking-tight">{title}</h1>
-        {subtitle ? <p className="mt-0.5 text-sm text-stone-500">{subtitle}</p> : null}
+    <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
+      <div className="min-w-0">
+        {eyebrow ? (
+          <Link
+            href={eyebrow.href}
+            className="mb-3 inline-flex items-center gap-1 text-xs font-medium text-stone-500 transition-colors hover:text-stone-900"
+          >
+            <svg viewBox="0 0 16 16" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden>
+              <path d="M10 3.5 5.5 8 10 12.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            {eyebrow.label}
+          </Link>
+        ) : null}
+        <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+        {subtitle ? <div className="mt-1.5 text-sm text-stone-500">{subtitle}</div> : null}
       </div>
-      {actions ? <div className="flex gap-2">{actions}</div> : null}
+      {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
+    </div>
+  );
+}
+
+export function Metric({
+  label,
+  value,
+  tone,
+  size = "lg",
+}: {
+  label: string;
+  value: ReactNode;
+  tone?: "good" | "bad";
+  size?: "md" | "lg";
+}) {
+  return (
+    <div>
+      <dt className="text-xs font-medium text-stone-500">{label}</dt>
+      <dd
+        className={cn(
+          "mt-1 font-semibold tracking-tight tabular",
+          size === "lg" ? "text-2xl" : "text-xl",
+          tone === "good" && "text-green-700",
+          tone === "bad" && "text-red-600",
+        )}
+      >
+        {value}
+      </dd>
     </div>
   );
 }
@@ -151,7 +195,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded px-1.5 py-0.5 text-xs font-medium",
+        "inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium",
         tones[tone],
       )}
     >
@@ -161,7 +205,7 @@ export function Badge({
 }
 
 export function Skeleton({ className }: { className?: string }) {
-  return <div className={cn("animate-pulse rounded-md bg-stone-200", className)} />;
+  return <div className={cn("animate-pulse rounded-xl bg-stone-200/80", className)} />;
 }
 
 export function PageSkeleton() {

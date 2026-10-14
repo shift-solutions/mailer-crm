@@ -6,7 +6,7 @@ import { formatCents } from "@/lib/money";
 import { listCampaigns } from "@/lib/queries";
 import { BreakevenBar } from "@/components/breakeven-bar";
 import { CampaignStatusBadge, DaysLabel } from "@/components/campaign-bits";
-import { ButtonLink, Card, PageHeader, Skeleton } from "@/components/ui";
+import { ButtonLink, Card, PageHeader, Skeleton, surfaceClass, cn } from "@/components/ui";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
@@ -17,7 +17,7 @@ export default function DashboardPage() {
         title="Dashboard"
         actions={<ButtonLink href="/campaigns/new">New campaign</ButtonLink>}
       />
-      <h2 className="mb-3 text-sm font-semibold text-stone-600">Active campaigns</h2>
+      <h2 className="mb-4 text-xs font-medium uppercase tracking-wider text-stone-400">Active campaigns</h2>
       <Suspense
         fallback={
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
@@ -54,7 +54,10 @@ async function ActiveCampaigns() {
           <Link
             key={c.id}
             href={`/campaigns/${c.id}`}
-            className="block rounded-lg border border-stone-200 bg-white p-4 hover:border-stone-400"
+            className={cn(
+              surfaceClass,
+              "block p-5 transition duration-200 hover:-translate-y-px hover:border-stone-300 hover:shadow-md",
+            )}
           >
             <div className="mb-3 flex items-start justify-between gap-2">
               <div className="min-w-0">

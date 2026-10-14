@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { useSearchParams } from "next/navigation";
-import { Button, Field, Input } from "@/components/ui";
+import { Button, Field, Input, surfaceClass, cn } from "@/components/ui";
 import { signIn, type LoginState } from "./actions";
 
 export function LoginForm() {
@@ -10,7 +10,11 @@ export function LoginForm() {
   const notAdmin = useSearchParams().get("error") === "not_admin";
 
   return (
-    <form action={action} className="space-y-4 rounded-lg border border-stone-200 bg-white p-5">
+    <form action={action} className={cn(surfaceClass, "space-y-4 p-6")}>
+      <div className="mb-1">
+        <h1 className="text-lg font-semibold tracking-tight">Sign in</h1>
+        <p className="mt-1 text-sm text-stone-500">Admin access for Shift Solutions.</p>
+      </div>
       {notAdmin && !state.error ? (
         <p className="rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-800">
           This account isn&apos;t set up as an admin.
