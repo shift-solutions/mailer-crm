@@ -34,7 +34,7 @@ group by c.id;
 
 alter table public.admins enable row level security;
 create policy "admins read self" on public.admins
-  for select to authenticated using (user_id = auth.uid());
+  for select to authenticated using (user_id = (select auth.uid()));
 
 do $$
 declare t text;
@@ -46,10 +46,11 @@ begin
     execute format('alter table public.%I enable row level security', t);
     execute format(
       'create policy "admin all" on public.%I for all to authenticated
-       using (public.is_admin()) with check (public.is_admin())', t);
+       using ((select public.is_admin())) with check ((select public.is_admin()))', t);
   end loop;
 end $$;
 
 -- Lock down anon entirely; nothing is public through the Data API.
 revoke all on all tables in schema public from anon;
-revoke execute on function public.is_admin() from anon;
+revoke execute on function public.is_admin() from public, anon;
+grant execute on function public.is_admin() to authenticated;

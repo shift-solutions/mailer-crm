@@ -1,6 +1,6 @@
 -- Mailer CRM: core schema (all tables from the spec)
 
-create extension if not exists pgcrypto;
+-- gen_random_uuid() is built into Postgres 13+, so no extension is needed.
 
 -- ---------------------------------------------------------------------------
 -- Helpers
@@ -9,6 +9,7 @@ create extension if not exists pgcrypto;
 create or replace function public.set_updated_at()
 returns trigger
 language plpgsql
+set search_path = ''
 as $$
 begin
   new.updated_at = now();
@@ -27,7 +28,7 @@ returns boolean
 language sql
 stable
 security definer
-set search_path = public
+set search_path = ''
 as $$
   select exists (select 1 from public.admins where user_id = auth.uid());
 $$;
@@ -156,6 +157,7 @@ create index on public.campaign_spots (contact_id);
 create or replace function public.copy_format_spots_to_campaign()
 returns trigger
 language plpgsql
+set search_path = ''
 as $$
 begin
   insert into public.campaign_spots
@@ -177,6 +179,7 @@ for each row execute function public.copy_format_spots_to_campaign();
 create or replace function public.campaign_spot_sold_at()
 returns trigger
 language plpgsql
+set search_path = ''
 as $$
 begin
   if new.status = 'sold' and (tg_op = 'INSERT' or old.status is distinct from 'sold') then
