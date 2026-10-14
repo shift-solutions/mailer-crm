@@ -51,7 +51,7 @@ export function SpotDrawer({
 
   return (
     <div className="fixed inset-0 z-40 flex justify-end" role="dialog" aria-modal="true" aria-labelledby="spot-drawer-title">
-      <button type="button" aria-label="Close" className="absolute inset-0 bg-stone-900/20" onClick={onClose} tabIndex={-1} />
+      <button type="button" aria-label="Close" className="absolute inset-0 bg-black/30" onClick={onClose} tabIndex={-1} />
       <aside className="relative flex h-full w-full max-w-md flex-col overflow-y-auto bg-white shadow-xl">
         <header className="sticky top-0 z-10 flex items-start justify-between border-b border-stone-200 bg-white px-5 py-4">
           <div>
